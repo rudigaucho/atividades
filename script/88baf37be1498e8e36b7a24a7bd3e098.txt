@@ -1,0 +1,371 @@
+ version 7.1.059, Release 0306P30
+#
+ sysname CTA_0830639_INSTITUTO_CURITIBA_D
+#
+ clock timezone BRT minus 03:00:00
+ clock protocol ntp
+#
+ telnet server enable
+#
+ port-security enable
+#
+ ip unreachables enable
+ ip ttl-expires enable
+#
+ dns domain oi.net.br
+#
+ lldp global enable
+ lldp compliance cdp
+#
+ flow-interval 30
+#
+ password-recovery enable
+#
+vlan 1
+#
+traffic classifier class-default operator or
+ if-match acl 3104
+#
+traffic classifier class-default_in operator or
+ if-match dscp default
+#
+traffic classifier sup operator or
+ if-match acl 3020
+#
+traffic classifier sup_in operator or
+ if-match dscp af33
+#
+traffic behavior class-default
+ remark dscp default
+ queue af bandwidth pct 98
+ wred dscp
+ wred dscp default low-limit 341 high-limit 1023 discard-probability 1
+#
+traffic behavior sup
+ car cir 3000 cbs 187500 ebs 0 green remark-dscp-pass af33 red discard yellow pass
+ queue af bandwidth pct 1
+#
+traffic behavior traffic_in
+#
+qos policy CE_DA_IN
+ classifier sup_in behavior traffic_in
+ classifier class-default_in behavior traffic_in
+#
+qos policy DA_100_300M
+ classifier sup behavior sup
+ classifier class-default behavior class-default
+#
+policy-based-route 10 permit node 10
+ if-match acl 3010
+ apply precedence flash
+#
+policy-based-route 10 permit node 20
+ if-match acl 3020
+ apply precedence flash
+#
+controller Cellular0/0
+#
+interface Aux0
+#
+interface Serial2/0
+#
+interface NULL0
+#
+interface GigabitEthernet0/0
+ port link-mode route
+ description CTA VM 0830639; INSTITUTO CURITIBA DE INFORMATICA;  VPN VIP
+ bandwidth 300000
+ undo lldp enable
+ qos flow-interval 1
+#
+interface GigabitEthernet0/0.2001
+ description By DFID# = 229847 (CTA VM 0830639; INSTITUTO CURITIBA DE INFORMATICA; 300M; VPN VIP)
+ bandwidth 300000
+ ip address 10.60.101.2 255.255.255.252
+ ip netstream inbound
+ ip mtu 1500
+ qos reserved-bandwidth pct 95
+ qos lr outbound cir 300000 cbs 18750000 ebs 0
+ qos flow-interval 1
+ qos apply policy CE_DA_IN inbound
+ qos apply policy DA_100_300M outbound
+ vlan-type dot1q vid 2001
+#
+interface GigabitEthernet0/1
+ port link-mode route
+ description CONEXAO REDE LAN
+ ip address 172.18.102.1 255.255.255.0
+ ip netstream inbound
+ ip mtu 1500
+ qos flow-interval 1
+#
+bgp 65000
+ router-id 10.60.101.2
+ peer 10.60.101.1 as-number 8167
+ #
+ address-family ipv4 unicast
+  preference 20 200 200
+  import-route direct route-policy CONNECTED_TO_BGP
+  import-route static route-policy STATIC_TO_BGP
+  peer 10.60.101.1 enable
+  peer 10.60.101.1 advertise-community
+#
+route-policy CONNECTED_TO_BGP permit node 10
+ if-match ip address prefix-list PERMITE_CONECTADAS
+ apply cost 10
+#
+route-policy STATIC_TO_BGP permit node 10
+ if-match ip address prefix-list PERMITE_ESTATICAS
+ apply cost 10
+#
+ ip prefix-list PERMITE_CONECTADAS index 5 permit 0.0.0.0 0 less-equal 32
+ ip prefix-list PERMITE_ESTATICAS index 10 deny 0.0.0.0 0 less-equal 32
+#
+ ip as-path 1 permit ^$
+ ip as-path 2 permit ^(65000)+$
+#
+ scheduler logfile size 16
+#
+line class aux
+ user-role network-admin
+#
+line class tty
+ user-role network-operator
+#
+line class vty
+ authentication-mode scheme
+ user-role level-0
+ history-command max-size 256
+#
+line aux 0
+ authentication-mode scheme
+ user-role network-admin
+ idle-timeout 3 0
+#
+line vty 0 63
+ terminal type vt100
+ authentication-mode scheme
+ user-role level-0
+ idle-timeout 3 0
+ command authorization
+ command accounting
+#
+ ip route-static default-preference 1
+#
+ ip route-static 0.0.0.0 0 10.60.101.2 preference 60
+ ip route-static 100.122.32.120 29 GigabitEthernet0/0.2001 10.60.101.1 preference 250
+ ip route-static 100.122.34.8 29 GigabitEthernet0/0.2001 10.60.101.1 preference 250
+ ip route-static 200.216.124.0 24 GigabitEthernet0/0.2001 10.60.101.1 preference 250
+ ip route-static 200.222.75.0 24 GigabitEthernet0/0.2001 10.60.101.1 preference 250
+ ip route-static 200.222.124.192 28 GigabitEthernet0/0.2001 10.60.101.1 preference 250
+ ip route-static 200.222.131.96 29 GigabitEthernet0/0.2001 10.60.101.1 preference 250
+#
+ info-center synchronous
+#
+ snmp-agent
+ snmp-agent local-engineid 800063A280943FC265B7F800000001
+ snmp-agent community write CGS31SPRO acl 2931
+ snmp-agent community write RMScperjRW21 acl 2910
+ snmp-agent community read cpeRMSrjRO acl 2910
+ snmp-agent sys-info contact CENTRO DE GERENCIA DE REDES - OI
+ snmp-agent sys-info location OI - R2 - PR
+ snmp-agent sys-info version v2c v3
+#
+ ssh server enable
+#
+ nqa server enable
+#
+ ip local policy-based-route 10
+#
+ ntp-service enable
+ ntp-service authentication enable
+ ntp-service peer acl 2989
+ ntp-service authentication-keyid 1 authentication-mode md5 cipher $c$3$Y0shDA0i1p4lbymKV12jhyxt2pZTsmFmdAmr
+ ntp-service reliable authentication-keyid 1
+ ntp-service unicast-server 200.222.124.196 authentication-keyid 1
+ ntp-service unicast-server 200.222.124.197 authentication-keyid 1
+#
+acl basic 2910
+ description ACL_GERENCIA_OI_10
+ rule 0 permit source 200.222.75.0 0.0.0.255
+ rule 5 permit source 200.216.124.0 0.0.0.255
+ rule 10 deny
+#
+acl basic 2931
+ description ACL_GERENCIA_OI_31
+ rule 0 permit source 100.92.0.1 0
+ rule 5 permit source 100.92.0.2 0
+ rule 10 permit source 201.34.3.251 0
+ rule 15 permit source 201.34.3.252 0
+ rule 20 permit source 10.60.101.0 0.0.0.3
+ rule 25 permit source 200.97.144.192 0.0.0.63
+ rule 30 permit source 201.34.3.248 0.0.0.3
+ rule 35 permit source 200.187.151.0 0.0.0.255
+ rule 40 permit source 200.187.153.0 0.0.0.255
+ rule 45 permit source 200.199.241.0 0.0.0.255
+ rule 50 permit source 200.216.51.0 0.0.0.255
+ rule 55 permit source 200.216.124.0 0.0.0.255
+ rule 60 permit source 200.222.0.160 0.0.0.31
+ rule 65 permit source 200.222.14.0 0.0.0.255
+ rule 70 permit source 200.222.75.0 0.0.0.255
+ rule 75 permit source 200.222.131.96 0.0.0.7
+ rule 80 permit source 201.10.4.64 0.0.0.15
+ rule 85 permit source 201.10.124.64 0.0.0.15
+ rule 90 permit source 201.10.132.64 0.0.0.15
+ rule 95 permit source 201.10.198.224 0.0.0.7
+ rule 100 permit source 100.122.32.120 0.0.0.7
+ rule 105 permit source 100.122.34.8 0.0.0.7
+ rule 200 deny logging
+#
+acl basic 2989
+ description ACL_GERENCIA_OI_89
+ rule 0 permit source 200.222.124.196 0
+ rule 5 permit source 200.222.124.197 0
+ rule 10 deny logging
+#
+acl advanced 3010
+ description sup_acl
+ rule 0 permit udp precedence routine source-port eq snmp
+ rule 5 permit udp precedence routine destination-port eq snmp
+ rule 10 permit udp precedence routine source-port eq snmptrap
+ rule 15 permit udp precedence routine destination-port eq snmptrap
+ rule 20 permit tcp source-port eq tacacs
+ rule 25 permit tcp destination-port eq tacacs
+ rule 30 permit tcp source-port eq telnet
+ rule 35 permit tcp destination-port eq telnet
+ rule 40 permit udp source-port eq tftp
+ rule 45 permit udp destination-port eq tftp
+ rule 50 permit tcp source-port eq 22
+ rule 55 permit tcp destination-port eq 22
+ rule 60 permit udp source-port eq ntp
+ rule 65 permit udp destination-port eq ntp
+ rule 70 permit udp source-port eq 1967
+ rule 75 permit udp destination-port eq 1967
+#
+acl advanced 3020
+ description rp_acl
+ rule 0 permit ip dscp af33
+ rule 5 permit tcp destination-port eq bgp
+ rule 10 permit tcp source-port eq bgp
+ rule 15 permit ospf
+ rule 20 permit udp destination-port eq rip
+ rule 25 permit udp source-port eq rip
+#
+ tftp client source interface GigabitEthernet0/0.2001
+#
+ header login %
+*******************************************************************************
+                              OI - Simples Assim!
+
+    Cliente: INSTITUTO CURITIBA DE INFORMATICA
+    Circuito: CTA 0830639
+    Equipamento: CTA_0830639_INSTITUTO_CURITIBA_D
+
+ Warning! The use of this system is restricted to authorized users.
+ All information and communications on this system are subject to review,
+ monitoring and recording at any time, without notice or permission.
+ Unauthorized access or use shall be subject to prosecution.
+
+ Atencao! A utilizacao desse sistema e limitado a usuarios autorizados.
+ Todas as informacoes e comunicacoes sobre este sistema estao sujeitos ao
+ monitoramento e gravacao a qualquer momento, sem previo aviso ou autorizacao.
+ O Acesso ou uso nao autorizado estara sujeito as medidas legais.
+
+*******************************************************************************
+%
+ header shell %
+"NAO ESQUECA SALVAR A CONFIGURACAO DO ROUTER NA NVRAM, APOS CONSOLIDADA(s) A(s) ALTERACAO(OES) !!"
+%
+#
+ super authentication-mode scheme
+ super password role network-admin hash $h$6$Jio5mQOTKtY9Zn+0$hGiabBqbXmQ+/UykhT0Y+WTjc3iLHUjGFaBc+8+R2gG8Ot4uHqV1whKsGpusbm/QBaDUXt0v/HIWHKVJvweBrQ==
+ super password role level-15 hash $h$6$MWpdbsX+QGFV5gEH$AMLC7SKnMR9+7HuWeyuTE932FvKTDKZSxJsdxwnM+8Hd9KQt0fSzFyeeJa9HV/WhlWS1a+6ZHqTFDaslRmK5RQ==
+#
+hwtacacs scheme tacacsoi
+ primary authentication 200.222.131.97 key cipher $c$3$tM0Bc+BGivKDwsTOeMXcmWkmYlIRoXmrJ+beQt3lU6EGRHwPMg==
+ primary authorization 200.222.131.97 key cipher $c$3$J8FXNDRsP0ZeOweArwPUASQGOEYCneWLPuAvnZtMkD95ql9ZhQ==
+ primary accounting 200.222.131.97 key cipher $c$3$0WriA/PoCacNZ9hdvy95ZQ566StxNw66VdQZa6YyZ2ksn1kePQ==
+ secondary authentication 200.222.75.97 key cipher $c$3$VGgyaB18/WQ9LfZzqK6ZhFLhG+Mu8ffVOcnDslYBUzgTs7eHHg==
+ secondary authorization 200.222.75.97 key cipher $c$3$0Z1LKbIM0L6MZf8bv/q2kPyj4UP3VidNIUGBEMv6ZY4Dn1+MXg==
+ secondary accounting 200.222.75.97 key cipher $c$3$18sl1Ks+1TeFyix6F5iV0z4WUwTo49QlXiNozhMiweY5q9TLHw==
+ timer response-timeout 10
+ user-name-format without-domain
+#
+domain oi.net.br
+ authentication login hwtacacs-scheme tacacsoi local
+ authentication super hwtacacs-scheme tacacsoi
+ authorization command hwtacacs-scheme tacacsoi local
+ authentication default hwtacacs-scheme tacacsoi local
+ authorization default hwtacacs-scheme tacacsoi local
+ accounting default hwtacacs-scheme tacacsoi local
+#
+domain system
+ state block
+#
+ domain default enable oi.net.br
+#
+role name level-0
+ description Predefined level-0 role
+#
+role name level-1
+ description Predefined level-1 role
+#
+role name level-2
+ description Predefined level-2 role
+#
+role name level-3
+ description Predefined level-3 role
+#
+role name level-4
+ description Predefined level-4 role
+#
+role name level-5
+ description Predefined level-5 role
+#
+role name level-6
+ description Predefined level-6 role
+#
+role name level-7
+ description Predefined level-7 role
+#
+role name level-8
+ description Predefined level-8 role
+#
+role name level-9
+ description Predefined level-9 role
+#
+role name level-10
+ description Predefined level-10 role
+#
+role name level-11
+ description Predefined level-11 role
+#
+role name level-12
+ description Predefined level-12 role
+#
+role name level-13
+ description Predefined level-13 role
+#
+role name level-14
+ description Predefined level-14 role
+#
+user-group system
+#
+local-user admin class manage
+ password hash $h$6$hqS2e6IQaMlond1u$dH+gK2bT4B3IRqUTJqzURyRpG/Sp3C65hdlU+yadAhtwOUVEa3aksXxQj3RO81W+8VDQyfJMsMtF3u6jOBcM9g==
+ service-type ftp
+ service-type ssh telnet
+ authorization-attribute user-role network-operator
+#
+local-user cpe-rms class manage
+ password hash $h$6$UTCX6Wh9vyuXqv1P$BEF5WGupAxr04An40Io2/nnKs4e17SNEH8DrVaeUOu00mstQ1C2s7oP8NRWxfdKkXeap1Ia/j74eyXxOqqcITg==
+ service-type ssh telnet terminal
+ authorization-attribute user-role level-15
+#
+local-user pr0830639 class manage
+ password hash $h$6$IWDu9FAnbsbeclwl$eqXfJRgEis8smun3PRf5Lk1DYGdNRThTAqN2pJlGzg7P2cxwCNmhv3pWBaqSfEVm3L/PdL8OTL4VuUG/h3o/Og==
+ service-type ftp
+ service-type telnet terminal
+ authorization-attribute user-role network-admin
+ authorization-attribute user-role network-operator
+#

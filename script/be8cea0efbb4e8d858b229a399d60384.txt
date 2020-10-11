@@ -1,0 +1,576 @@
+CTA_0731225_COCAMAR#sh run
+Building configuration...
+
+
+Current configuration : 17658 bytes
+!
+! Last configuration change at 13:55:49 BRT Thu Apr 30 2020 by cpe-rms
+!
+version 16.9
+no service pad
+service tcp-keepalives-in
+service tcp-keepalives-out
+service timestamps debug datetime msec localtime show-timezone
+service timestamps log datetime msec localtime show-timezone year
+service password-encryption
+service compress-config
+service sequence-numbers
+platform qfp utilization monitor load 80
+no platform punt-keepalive disable-kernel-core
+platform qos marker-statistics
+platform qos match-statistics per-filter
+platform qos match-statistics per-ace
+platform hardware throughput level 300000
+!
+hostname CTA_0731225_COCAMAR
+!
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+security passwords min-length 8
+logging count
+logging buffered 4096000
+logging persistent size 2621440
+no logging console
+enable secret 5 $1$FLZ2$Jc5WdCgJ7iYCvV2qEPS4Z.
+!
+aaa new-model
+!
+!
+!
+!
+!
+!
+!
+!
+aaa session-id common
+clock timezone BRT -3 0
+no ip source-route
+ip arp proxy disable
+!
+no ip bootp server
+no ip domain lookup
+ip domain name oi.net.br
+!
+ip dhcp pool webuidhcp
+!
+!
+!
+login on-failure log
+login on-success log
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+multilink bundle-name authenticated
+!
+flow exporter EXPORTER-1
+ description NETFLOW
+ destination 172.16.1.156
+ source GigabitEthernet0/0/1
+ transport udp 2055
+!
+!
+flow monitor FLOW-MONITOR-1
+ exporter EXPORTER-1
+ record netflow ipv4 original-input
+!
+!
+!
+!
+crypto pki trustpoint TP-self-signed-3111660455
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-3111660455
+ revocation-check none
+ rsakeypair TP-self-signed-3111660455
+!
+!
+crypto pki certificate chain TP-self-signed-3111660455
+ certificate self-signed 01
+  30820330 30820218 A0030201 02020101 300D0609 2A864886 F70D0101 05050030
+  31312F30 2D060355 04031326 494F532D 53656C66 2D536967 6E65642D 43657274
+  69666963 6174652D 33313131 36363034 3535301E 170D3139 31323236 31393530
+  32365A17 0D333030 31303130 30303030 305A3031 312F302D 06035504 03132649
+  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D33 31313136
+  36303435 35308201 22300D06 092A8648 86F70D01 01010500 0382010F 00308201
+  0A028201 0100B575 9753086F 37961D64 C51055A7 ECB30C1D 90F47C52 D9518EDE
+  8FDDEC97 2946DBA3 956AE499 71E93FE3 299B066F 63A32192 4166F968 6BCC771B
+  EF549066 ECCBD926 49184E74 3BA4964D 447186C6 46106A4E FACA9D26 254C5723
+  55CDB6E6 7DB04431 A06059A4 AB889F2D 988B5CC5 78EF776D 7B8FB46D A1DF2B8A
+  076D1EB7 FDAEEF4A 79588F21 D690A2A6 5AF46934 F065F7E3 AD38A4A2 26FC26E7
+  0B346C0C DDBB7388 A866EF84 4AD02105 3941E8BD A2EB1C20 04F1C421 731E0DE9
+  78399CCA 149D2142 96F1F374 4BAA25C8 57DEFA10 3B2D9967 CF352FF8 D2DA7F72
+  CD31C7F3 C755A0C3 B857A584 D1C425CF 6C942E46 A453B871 0D8BA465 88D610F9
+  66A7801D 02850203 010001A3 53305130 0F060355 1D130101 FF040530 030101FF
+  301F0603 551D2304 18301680 141723A6 789B4730 28A77911 4DB2F4E3 C49B38BF
+  D5301D06 03551D0E 04160414 1723A678 9B473028 A779114D B2F4E3C4 9B38BFD5
+  300D0609 2A864886 F70D0101 05050003 82010100 05D5235B BCEF679F 8BEDFB62
+  98474A3C 157112C4 F8D656F3 6B5417E9 1ABA939E A0E67318 8FD7B49D F9614DAB
+  E6E98A7C AA85F9DF 468D5D5B E51E3F24 75720442 8627627B 3B2B9496 1E035CAF
+  222AA7C9 672561C8 943D7310 3F48D448 33D065B3 99E3E5AE 98BAA4CF 6A512943
+  67DC0CE5 4F9C8E35 91276399 CC1D831B 1686AB5E 94A7A5DF D6EE9B39 C018C7E6
+  9B4895B4 0A04F273 D5749EFD EE1DA710 F662083B C82EAA2D CB5AAD8A 8DE6B995
+  085CD2B3 81955E4F D0BEB194 DC25DF02 6DF54B89 9D98265A 9914526F 1C64E9E0
+  3FFE95FA 65F94FD6 8B6FD5DE 57E22CB7 D41BE8AF 93942A31 2447D5C2 31651912
+  0CB80283 6AA1EF8B 231020C3 9F35F33B 010E1ABF
+        quit
+!
+license udi pid ISR4331/K9 sn TSP23453423
+no license smart enable
+diagnostic bootup level minimal
+!
+spanning-tree extend system-id
+archive
+ log config
+  logging enable
+  logging size 1000
+  hidekeys
+ path flash:/BKP-$h
+ write-memory
+!
+!
+!
+username cpe-rms secret 5 $1$fyiG$lLlnIlEZGUIofLM0V8cCU0
+!
+redundancy
+ mode none
+!
+!
+!
+track 1 ip route 192.168.254.254 255.255.255.255 reachability
+!
+track 2 ip sla 2
+ delay down 15 up 30
+!
+track 3 ip sla 3
+ delay down 15 up 30
+!
+track 4 ip sla 4
+ delay down 15 up 30
+!
+track 5 ip sla 5
+ delay down 15 up 30
+!
+track 6 ip sla 6
+ delay down 15 up 30
+!
+track 7 ip sla 7
+ delay down 15 up 30
+!
+track 8 ip sla 8
+ delay down 15 up 30
+!
+track 11 ip sla 11
+ delay down 15 up 30
+!
+track 238 ip sla 238
+ delay down 15 up 30
+!
+!
+class-map match-any be
+ match any
+class-map match-any critical
+ match ip dscp af31
+ match access-group name critSaa_acl
+ match access-group name critical_acl
+class-map match-any priority
+ match ip dscp af21
+ match access-group name priSaa_acl
+ match access-group name priority_acl
+class-map match-any video_in
+ match ip dscp af41
+class-map match-any notSAAcrit
+ match not access-group name critSaa_acl
+class-map match-any voice_in
+ match ip dscp ef
+class-map match-any sup_in
+ match ip dscp af33
+class-map match-any priority_in
+ match ip dscp af12  af21
+class-map match-any notSAApri
+ match not access-group name priSaa_acl
+class-map match-any critical_in
+ match ip dscp af13  af31
+class-map match-any video
+ match ip dscp af41
+ match access-group name videoSaa_acl
+ match access-group name video_acl
+class-map match-any voice
+ match ip dscp ef
+ match access-group name voiceSaa_acl
+ match access-group name voice_acl
+class-map match-any sup
+ match ip dscp af33
+ match access-group name rp_acl
+!
+policy-map DB_40-60_100M
+ class sup
+  bandwidth percent 1
+  set ip dscp af33
+ class priority
+  bandwidth percent 37
+  set ip dscp af21
+  random-detect dscp-based
+ class be
+  bandwidth percent 61
+  random-detect dscp-based
+  set ip dscp default
+policy-map CE_DB_IN
+ class sup_in
+ class priority_in
+ class class-default
+policy-map DB_40-60_100M_pai
+ class class-default
+  shape average 100000000
+   service-policy DB_40-60_100M
+!
+!
+!
+!
+!
+!
+interface GigabitEthernet0/0/0
+ description CTA VM 0731225; COCAMAR COOPERATIVA AGROINDUSTRIAL;  VPN VIP
+ bandwidth 100000
+ no ip address
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+ load-interval 30
+ speed 100
+ no negotiation auto
+ no cdp enable
+!
+interface GigabitEthernet0/0/0.2001
+ description By DFID# = 114301 (CTA VM 0731225; COCAMAR COOPERATIVA AGROINDUSTRIAL; 100M; VPN VIP)
+ bandwidth 100000
+ encapsulation dot1Q 2001
+ ip flow monitor FLOW-MONITOR-1 input
+ ip flow monitor FLOW-MONITOR-1 output
+ ip address 192.168.99.18 255.255.255.252
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+ no cdp enable
+ service-policy input CE_DB_IN
+ service-policy output DB_40-60_100M_pai
+!
+interface GigabitEthernet0/0/1
+ description CONEXAO REDE LAN DATACENTER
+ ip address 10.44.112.38 255.255.255.240
+ standby 1 ip 10.44.112.34
+ standby 1 priority 95
+ standby 1 preempt
+ standby 1 track 1 decrement 20
+ standby 2 ip 10.44.112.35
+ standby 2 preempt
+ negotiation auto
+!
+interface GigabitEthernet0/0/2
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface GigabitEthernet0
+ vrf forwarding Mgmt-intf
+ no ip address
+ shutdown
+ negotiation auto
+!
+router bgp 65000
+ bgp router-id 192.168.99.18
+ bgp log-neighbor-changes
+ bgp maxas-limit 100
+ neighbor 192.168.99.17 remote-as 8167
+ neighbor 192.168.99.17 timers 10 30
+ !
+ address-family ipv4
+  redistribute connected route-map CONNECTED_TO_BGP
+  redistribute static route-map STATIC_TO_BGP
+  neighbor 192.168.99.17 activate
+  neighbor 192.168.99.17 send-community
+  default-information originate
+ exit-address-family
+!
+ip local policy route-map Interno
+ip forward-protocol nd
+no ip http server
+no ip http secure-server
+ip route 192.168.220.0 255.255.255.0 GigabitEthernet0/0/1 10.44.112.40 name CAMBEKM12_1TOC track 2
+ip route 192.168.196.0 255.255.255.0 GigabitEthernet0/0/1 10.44.112.40 name CAMBECARAMURU_1TOC track 3
+ip route 192.168.240.0 255.255.255.0 GigabitEthernet0/0/1 10.44.112.40 name PALMITAL track 5
+ip route 192.168.236.0 255.255.255.0 GigabitEthernet0/0/1 10.44.112.40 name PALMITAL_REC track 6
+ip route 192.168.244.0 255.255.255.0 GigabitEthernet0/0/1 10.44.112.40 name CRUZALIA track 7
+ip route 192.168.206.0 255.255.255.0 GigabitEthernet0/0/1 10.44.112.40 name IEPE track 8
+ip route 192.168.246.0 255.255.255.0 GigabitEthernet0/0/1 10.44.112.40 name SAOMARTINHO_1TOC track 9
+ip route 192.168.218.0 255.255.255.0 GigabitEthernet0/0/1 10.44.112.40 name WARTA_1TOC track 11
+ip route 192.168.238.0 255.255.255.0 GigabitEthernet0/0/1 10.44.112.40 name MARACAI_1TOC track 238
+ip route 0.0.0.0 0.0.0.0 GigabitEthernet0/0/1 10.44.112.33
+ip route 10.44.126.0 255.255.255.0 GigabitEthernet0/0/1 10.44.112.33
+ip route 10.44.127.0 255.255.255.0 GigabitEthernet0/0/1 10.44.112.33
+ip route 10.44.128.0 255.255.255.0 GigabitEthernet0/0/1 10.44.112.33
+ip route 100.122.32.120 255.255.255.248 GigabitEthernet0/0/0.2001 192.168.99.17 250
+ip route 100.122.34.8 255.255.255.248 GigabitEthernet0/0/0.2001 192.168.99.17 250
+ip route 172.16.1.156 255.255.255.255 GigabitEthernet0/0/1 10.44.112.36
+ip route 172.16.10.28 255.255.255.255 GigabitEthernet0/0/1 10.44.112.36
+ip route 172.20.0.0 255.255.0.0 GigabitEthernet0/0/1 10.44.112.40
+ip route 172.20.250.0 255.255.255.0 GigabitEthernet0/0/1 10.44.112.36
+ip route 172.20.254.0 255.255.255.0 GigabitEthernet0/0/1 10.44.112.36
+ip route 192.168.0.0 255.255.0.0 GigabitEthernet0/0/1 10.44.112.40 39
+ip route 192.168.10.0 255.255.255.0 GigabitEthernet0/0/1 10.44.112.40
+ip route 192.168.74.0 255.255.255.0 GigabitEthernet0/0/1 10.44.112.40
+ip route 192.168.99.8 255.255.255.252 GigabitEthernet0/0/1 10.44.112.41
+ip route 200.216.124.0 255.255.255.0 GigabitEthernet0/0/0.2001 192.168.99.17 250
+ip route 200.222.75.0 255.255.255.0 GigabitEthernet0/0/0.2001 192.168.99.17 250
+ip route 200.222.124.192 255.255.255.240 GigabitEthernet0/0/0.2001 192.168.99.17 250
+ip route 200.222.131.96 255.255.255.248 GigabitEthernet0/0/0.2001 192.168.99.17 250
+!
+ip bgp-community new-format
+ip as-path access-list 1 permit ^$
+ip as-path access-list 2 permit ^(65000_)+$
+!
+!
+ip prefix-list PERMITE_CONECTADAS seq 5 permit 0.0.0.0/0 le 32
+!
+ip prefix-list PERMITE_ESTATICAS seq 1 permit 0.0.0.0/0
+ip prefix-list PERMITE_ESTATICAS seq 2 permit 10.44.126.0/24
+ip prefix-list PERMITE_ESTATICAS seq 3 permit 10.44.127.0/24
+ip prefix-list PERMITE_ESTATICAS seq 4 permit 172.16.1.156/32
+ip prefix-list PERMITE_ESTATICAS seq 5 permit 172.20.0.0/16
+ip prefix-list PERMITE_ESTATICAS seq 6 permit 192.168.0.0/16
+ip prefix-list PERMITE_ESTATICAS seq 7 permit 192.168.10.0/24
+ip prefix-list PERMITE_ESTATICAS seq 8 permit 192.168.74.0/24
+ip prefix-list PERMITE_ESTATICAS seq 10 permit 192.168.196.0/24
+ip prefix-list PERMITE_ESTATICAS seq 11 permit 192.168.206.0/24
+ip prefix-list PERMITE_ESTATICAS seq 12 permit 192.168.218.0/24
+ip prefix-list PERMITE_ESTATICAS seq 13 permit 192.168.220.0/24
+ip prefix-list PERMITE_ESTATICAS seq 14 permit 192.168.236.0/24
+ip prefix-list PERMITE_ESTATICAS seq 15 permit 192.168.238.0/24
+ip prefix-list PERMITE_ESTATICAS seq 16 permit 192.168.240.0/24
+ip prefix-list PERMITE_ESTATICAS seq 17 permit 192.168.244.0/24
+ip prefix-list PERMITE_ESTATICAS seq 18 permit 192.168.246.0/24
+ip prefix-list PERMITE_ESTATICAS seq 19 permit 192.168.99.8/30
+ip prefix-list PERMITE_ESTATICAS seq 100 deny 0.0.0.0/0 le 32
+!
+ip access-list extended critSaa_acl
+ permit ip 192.168.99.16 0.0.0.3 any dscp cs3
+ip access-list extended priSaa_acl
+ permit ip 192.168.99.16 0.0.0.3 any dscp cs2
+ip access-list extended priority_acl
+ permit tcp any any eq 22
+ permit tcp any eq 22 any
+ permit tcp any any eq telnet
+ permit tcp any eq telnet any
+ permit tcp any any eq 1494
+ permit tcp any eq 1494 any
+ permit ip host 172.16.1.201 host 10.44.127.49
+ permit ip host 10.44.127.49 host 172.16.1.201
+ permit ip host 10.44.127.49 host 172.16.1.220
+ permit ip host 172.16.1.220 host 10.44.127.49
+ permit ip any any dscp af21
+ deny   ip any any
+ip access-list extended rp_acl
+ permit tcp any eq bgp any
+ permit tcp any any eq bgp
+ permit ospf any any
+ permit udp any eq rip any eq rip
+ip access-list extended sup_acl
+ permit udp any any eq snmp precedence routine
+ permit udp any eq snmp any precedence routine
+ permit udp any any eq snmptrap precedence routine
+ permit udp any eq snmptrap any precedence routine
+ permit tcp any any eq tacacs
+ permit tcp any eq tacacs any
+ permit tcp any any eq telnet
+ permit tcp any eq telnet any
+ permit udp any any eq tftp
+ permit udp any eq tftp any
+ permit tcp any any eq 22
+ permit tcp any eq 22 any
+ permit udp any any eq ntp
+ permit udp any eq ntp any
+ permit udp any any eq 1967
+ permit udp any eq 1967 any
+ip access-list extended videoSaa_acl
+ permit ip 192.168.99.16 0.0.0.3 any dscp af41
+ip access-list extended voiceSaa_acl
+ permit ip 192.168.99.16 0.0.0.3 any dscp ef
+ip sla 2
+ icmp-echo 192.168.219.6 source-interface GigabitEthernet0/0/1
+ request-data-size 50
+ frequency 10
+ip sla schedule 2 life forever start-time now
+ip sla 3
+ icmp-echo 192.168.195.6 source-interface GigabitEthernet0/0/1
+ request-data-size 50
+ frequency 10
+ip sla schedule 3 life forever start-time now
+ip sla 4
+ icmp-echo 192.168.243.6 source-interface GigabitEthernet0/0/1
+ request-data-size 50
+ frequency 10
+ip sla schedule 4 life forever start-time now
+ip sla 5
+ icmp-echo 192.168.239.6 source-interface GigabitEthernet0/0/1
+ request-data-size 50
+ frequency 10
+ip sla schedule 5 life forever start-time now
+ip sla 6
+ icmp-echo 192.168.235.6 source-interface GigabitEthernet0/0/1
+ request-data-size 50
+ frequency 10
+ip sla schedule 6 life forever start-time now
+ip sla 7
+ icmp-echo 192.168.243.6 source-interface GigabitEthernet0/0/1
+ request-data-size 50
+ frequency 10
+ip sla schedule 7 life forever start-time now
+ip sla 8
+ icmp-echo 192.168.205.6 source-interface GigabitEthernet0/0/1
+ request-data-size 50
+ frequency 10
+ip sla schedule 8 life forever start-time now
+ip sla 11
+ icmp-echo 192.168.217.6 source-interface GigabitEthernet0/0/1
+ request-data-size 50
+ frequency 10
+ip sla schedule 11 life forever start-time now
+ip sla 238
+ icmp-echo 192.168.237.6 source-interface GigabitEthernet0/0/1
+ request-data-size 50
+ frequency 10
+ip sla schedule 238 life forever start-time now
+ip sla responder
+access-list 1 deny   any
+access-list 10 permit 200.222.75.0 0.0.0.255
+access-list 10 permit 200.216.124.0 0.0.0.255
+access-list 20 deny   any
+access-list 31 permit 100.92.0.1
+access-list 31 permit 100.92.0.2
+access-list 31 permit 192.168.99.16 0.0.0.3
+access-list 31 permit 200.97.144.192 0.0.0.63
+access-list 31 permit 200.187.151.0 0.0.0.255
+access-list 31 permit 200.187.153.0 0.0.0.255
+access-list 31 permit 200.199.241.0 0.0.0.255
+access-list 31 permit 200.216.51.0 0.0.0.255
+access-list 31 permit 200.216.124.0 0.0.0.255
+access-list 31 permit 200.222.0.160 0.0.0.31
+access-list 31 permit 200.222.14.0 0.0.0.255
+access-list 31 permit 200.222.75.0 0.0.0.255
+access-list 31 permit 200.222.131.96 0.0.0.7
+access-list 31 permit 201.10.4.64 0.0.0.15
+access-list 31 permit 201.10.124.64 0.0.0.15
+access-list 31 permit 201.10.132.64 0.0.0.15
+access-list 31 remark Blocos do CoPS
+access-list 31 permit 201.10.198.224 0.0.0.7
+access-list 31 remark Blocos do Oi Dados Facil
+access-list 31 permit 100.122.32.120 0.0.0.7
+access-list 31 permit 100.122.34.8 0.0.0.7
+access-list 31 deny   any log
+access-list 89 permit 200.222.124.196
+access-list 89 permit 200.222.124.197
+access-list 89 deny   any log
+!
+!
+route-map CONNECTED_TO_BGP permit 10
+ match ip address prefix-list PERMITE_CONECTADAS
+ set metric 10
+!
+route-map Interno permit 10
+ match ip address sup_acl
+ set ip precedence flash
+ set ip tos 12
+!
+route-map Interno deny 20
+!
+route-map STATIC_TO_BGP permit 10
+ match ip address prefix-list PERMITE_ESTATICAS
+ set metric 10
+!
+snmp-server community cocamar RO
+snmp-server community cpeRMSrjRO RO 10
+snmp-server community RMScperjRW21 RW 10
+snmp-server community CGS31SPRO RW 31
+snmp-server community public RO
+snmp-server location OI - R2 - PR
+snmp-server contact CENTRO DE GERENCIA DE REDES - OI
+snmp ifmib ifindex persist
+!
+!
+!
+!
+control-plane
+!
+banner exec ^C
+"NAO ESQUECA SALVAR A CONFIGURACAO DO ROUTER NA NVRAM, APOS CONSOLIDADA(s) A(s) ALTERACAO(OES) !! "
+^C
+banner login ^C
+*******************************************************************************
+                              OI - Simples Assim!
+
+    Cliente: COCAMAR COOPERATIVA AGROINDUSTRIAL
+    Circuito: CTA 0731225
+    Equipamento: $(hostname)
+
+ Warning! The use of this system is restricted to authorized users.
+ All information and communications on this system are subject to review,
+ monitoring and recording at any time, without notice or permission.
+ Unauthorized access or use shall be subject to prosecution.
+
+ Atencao! A utilizacao desse sistema e limitado a usuarios autorizados.
+ Todas as informacoes e comunicacoes sobre este sistema estao sujeitos ao
+ monitoramento e gravacao a qualquer momento, sem previo aviso ou autorizacao.
+ O Acesso ou uso nao autorizado estara sujeito as medidas legais.
+
+*******************************************************************************
+^C
+!
+line con 0
+ session-timeout 3
+ exec-timeout 3 0
+ password 7 0229165C190B1C025C6B5B392544
+ logging synchronous
+ transport preferred telnet
+ transport input none
+ stopbits 1
+line aux 0
+ session-timeout 3
+ exec-timeout 3 0
+ password 7 1236171000061F273A0E76081366
+ no exec
+ stopbits 1
+line vty 0 4
+ session-timeout 3
+ exec-timeout 3 0
+ password 7 0720334B5C040A260737592C2479
+ logging synchronous
+ transport input telnet ssh
+ transport output all
+!
+ntp authentication-key 1 md5 0208104B585701355C 7
+ntp authenticate
+ntp trusted-key 1
+ntp access-group peer 89
+ntp server 200.222.124.196 key 1
+ntp server 200.222.124.197 key 1
+!
+!
+!
+!
+!
+end
+
+CTA_0731225_COCAMAR#$
