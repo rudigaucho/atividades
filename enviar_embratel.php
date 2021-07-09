@@ -96,11 +96,13 @@ move_uploaded_file ($_FILES['script'] ['tmp_name'], $diretorio.$novo_nome )  ;
 
 $ba =$_POST['ba'];
 $ccto =$_POST['ccto'];
+$estacao =$_POST['estacao'];
 $contato =$_POST['contato'];
 $cliente =$_POST['cliente'];
 $atv =$_POST['atv'];
 $tipo =$_POST['tipo'];
 $descricao =$_POST['desc'];
+$acionamento =$_POST['acionamento'];
 
 
 
@@ -110,9 +112,9 @@ $descricao =$_POST['desc'];
 
 
 
-$query = "insert into atividade (ba,ccto,cliente,atividade,tipo,data,contato,descricao,anexo)";
+$query = "insert into atividade (ba,ccto,cliente,estacao,atividade,tipo,data,contato,descricao,anexo,acionamento)";
 
-$query.= "values ('$ba','$ccto','$cliente','$atv','$tipo',NOW(),'$contato','$descricao','$novo_nome')";
+$query.= "values ('$ba','$ccto','$cliente','$estacao','$atv','$tipo',NOW(),'$contato','$descricao','$novo_nome','$acionamento')";
 
 
 
@@ -150,10 +152,12 @@ else
   $ba =$_POST['ba'];
   $ccto =$_POST['ccto'];
   $contato =$_POST['contato'];
+  $estacao =$_POST['estacao'];
   $cliente =$_POST['cliente'];
   $atv =$_POST['atv'];
   $tipo =$_POST['tipo'];
   $descricao =$_POST['desc'];
+  $acionamento =$_POST['acionamento'];
   
   
   
@@ -163,9 +167,9 @@ else
   
   
   
-  $query = "insert into atividade (ba,ccto,cliente,atividade,tipo,data,contato,descricao)";
+  $query = "insert into atividade (ba,ccto,cliente,estacao,atividade,tipo,data,contato,descricao,acionamento)";
   
-  $query.= "values ('$ba','$ccto','$cliente','$atv','$tipo',NOW(),'$contato','$descricao')";
+  $query.= "values ('$ba','$ccto','$cliente','$estacao','$atv','$tipo',NOW(),'$contato','$descricao','$acionamento')";
   
   
   

@@ -185,6 +185,19 @@ float:right;
        <option value="MODEM"  >MODEM</option>
        <option value="GABINETE"  >GABINETE</option>
        <option value="EDD"  >EDD</option>
+       <option value="ONT"  >ONT</option>
+       <option value="OUTROS"  >OUTROS</option>
+    
+    </select>
+        </div>
+        <div class="form-group">  
+    <label for="email" >Status:</label> <br>
+    <select  name="status" class="form-control" required >
+       <option value="EM USO"  >EM USO</option>
+       <option value="CARGA"  >CARGA</option>
+       <option value="RETIRADA"  >RETIRADA</option>
+       <option value="RESERVA"  >RESERVA</option>
+       <option value="REPASSADO"  >REPASSADO</option>
     
     </select>
         </div>

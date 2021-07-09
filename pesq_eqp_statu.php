@@ -39,11 +39,37 @@
 <div class="container">
  
   
-  <form class="form-inline" role="form"  method="POST" action="pesq_eqp.php"  style="margin-left:10%;">
+  <form class="form-inline" role="form"  method="POST" action="pesq_eqp_statu.php"  style="margin-left:10%;">
     <div class="form-group">
-      <label for="email">N° SÉRIE OU EQUIPAMENTO</label>
-      <input type="text" class="form-control" id="nome" name="nome" placeholder="Pesquisa" >
+      <label for="email">EQUIPAMENTO</label>
+      <div class="form-group">  
+    
+    <select  name="nome" class="form-control" required >
+       <option value="ROTEADOR"  >ROTEADOR</option>
+       <option value="MODEM"  >MODEM</option>
+       <option value="GABINETE"  >GABINETE</option>
+       <option value="EDD"  >EDD</option>
+       <option value="ONT"  >ONT</option>
+       <option value="OUTROS"  >OUTROS</option>
+       <option value=""  >TODOS</option>
+    
+    </select>
+  
     </div>
+
+    </div>
+        <div class="form-group">  
+    
+    <select  name="status" class="form-control" required >
+       <option value="EM USO"  >EM USO</option>
+       <option value="CARGA"  >CARGA</option>
+       <option value="RETIRADA"  >RETIRADA</option>
+       <option value="RESERVA"  >RESERVA</option>
+       <option value="REPASSADO"  >REPASSADO</option>
+       <option value=""  >TODOS</option>
+    
+    </select>
+        </div>
     
     
     <button type="submit"  name="submit" id="submit" class="btn btn-default">Busca</button> <br><br><br><br>
@@ -73,7 +99,8 @@
 if (isset($_POST ['submit']) )
 {
 $busca = $_POST['nome'];
-$sql = mysql_query ("select * from eqp where serial  = '$busca'"  );
+$status = $_POST['status'];
+$sql = mysql_query ("select * from eqp where eqp  like '%$busca%' and status LIKE '%$status%' order by status"  );
 
 
 

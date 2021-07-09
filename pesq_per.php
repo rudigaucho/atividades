@@ -193,3 +193,5 @@ if (mysql_num_rows($sql) > 0)
 </body>
 </html>
 
+<script src="js/main.js"></script>
+

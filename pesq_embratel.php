@@ -145,9 +145,11 @@ function loginsuccessfully()
         <th>B.A</th>
         <th>CLIENTE</th>
         <th>CIRCUITO</th>
+        <th>ESTAÇÃO</th>
         <th>CONTATO</th>
          <th>ATIVIDADE</th>
         <th>TIPO</th>
+        <th>ACIONAMENTO</th>
         <th>DATA</th>
          <th>OBS</th>
         <th>ANEXO</th>
@@ -184,9 +186,11 @@ if (mysql_num_rows($sql) > 0)
 <td> <?php echo $dado ["ba"];  ?></td>
 <td> <?php echo $dado ["cliente"];  ?></td>
 <td> <?php echo $dado ["ccto"];  ?></td>
+<td> <?php echo $dado ["estacao"];  ?></td>
 <td> <?php echo $dado ["contato"];  ?></td>
  <td> <?php echo $dado ["atividade"];  ?></td>
 <td> <?php echo $dado ["tipo"];  ?></td>
+<td> <?php echo $dado ["acionamento"];  ?></td>
 <td> <?php echo $dado ["data"];  ?></td>
 <?php $script =  $dado ["anexo"];   ?>
 <?php $ba =  $dado ["ba"];   ?>

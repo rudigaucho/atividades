@@ -65,6 +65,7 @@ $eqp =$_POST['eqp'];
 $serie =$_POST['serie'];
 $modelo =$_POST['modelo'];
 $obs =$_POST['obs'];
+$status =$_POST['status'];
 
 
 
@@ -75,9 +76,9 @@ $obs =$_POST['obs'];
 
 
 
-$query = "insert into eqp (serial,eqp,modelo,descricao,data)";
+$query = "insert into eqp (serial,eqp,modelo,descricao,status,data)";
 
-$query.= "values ('$serie','$eqp','$modelo','$obs',NOW())";
+$query.= "values ('$serie','$eqp','$modelo','$obs','$status',NOW())";
 
 
 

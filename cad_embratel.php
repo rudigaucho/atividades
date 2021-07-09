@@ -104,6 +104,10 @@
      <label for="pwd">CLIENTE:</label>
       <input type="text" class="form-control" id="cliente" name="cliente">
     </div>
+    <div class="form-group">
+     <label for="pwd">ESTAÇÃO:</label>
+      <input type="text" class="form-control"  name="estacao">
+    </div>
        <div class="form-group">
      <label for="pwd">CONTATO:</label>
       <input type="text" class="form-control" id="contato" name="contato">
@@ -126,6 +130,25 @@
 
         <div class="form-group">
 
+        <label for="sel1">ACIONAMENTO:</label>
+       <select class="form-control"  name="acionamento"  >
+
+
+         <option value="USUARIO">  USUARIO </option>
+         <option value="EMPREGADO">  EMPREGADO </option>
+         <option value="SEM CONTATO">  SEM CONTATO </option>
+         <option value="PREVENTIVA">  PREVENTIVA </option>
+         <option value="DIRETO">  DIRETO </option>
+         <option value="ND">  ND </option>
+       
+
+
+        </select><br>
+        </div>
+
+
+        <div class="form-group">
+
         <label for="sel1">TIPO:</label>
        <select class="form-control "  name="tipo"  >
 
@@ -138,6 +161,8 @@
 
         </select><br>
         </div>
+
+
        
        
   <div class="form-group">
